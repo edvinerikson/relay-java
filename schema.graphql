@@ -7,6 +7,7 @@ type User {
   name: String
   picture(size: String): String
   posts: [Post]
+  weirdList: [[Post]]
 }
 
 type Post {

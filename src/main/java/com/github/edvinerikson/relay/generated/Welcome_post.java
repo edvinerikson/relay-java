@@ -1,8 +1,10 @@
 package com.github.edvinerikson.relay.generated;
 
+import com.github.edvinerikson.relay.types.*;
+import java.util.Arrays;
 
-
-/* {
+/*
+{
   "kind": "Fragment",
   "name": "Welcome_post",
   "type": "Post",
@@ -17,10 +19,8 @@ package com.github.edvinerikson.relay.generated;
       "storageKey": null
     }
   ]
-} */
-
-import com.github.edvinerikson.relay.types.*;
-import java.util.Arrays;
+}
+*/
 
 public class Welcome_post extends Fragment {
 
@@ -33,12 +33,11 @@ public class Welcome_post extends Fragment {
         ScalarField
           .builder()
           .name("title")
-          .type("String")
           .alias("title")
+          .type("String")
           .args(Arrays.asList())
           .build()
       )
     );
   }
 }
-

@@ -1,7 +1,19 @@
 import { PluginInterface } from "relay-compiler/lib/language/RelayLanguagePluginInterface";
 import { find } from "./FindGraphQLTags";
-import { Selection, Argument, ArgumentValue } from "relay-compiler";
+import {
+  Selection,
+  Argument,
+  ArgumentValue,
+  Parser,
+  IRTransforms,
+  GeneratedDefinition,
+  ArgumentDefinition,
+  Root
+} from "relay-compiler";
 import { format } from "prettier";
+import invariant from "invariant";
+IRTransforms.codegenTransforms;
+
 function stringify(
   parts: TemplateStringsArray,
   ...interpolation: (string | null | undefined)[]
@@ -15,161 +27,218 @@ function stringify(
   str += parts[parts.length - 1];
   return str;
 }
+function str(string: string): string {
+  return JSON.stringify(string);
+}
+function generateCode(
+  node:
+    | GeneratedDefinition
+    | ArgumentDefinition
+    | Selection
+    | Root
+    | Argument
+    | ArgumentValue
+): string {
+  switch (node.kind) {
+    case "Literal": {
+      let strValue = node.value;
+      if (
+        strValue !== "true" &&
+        strValue !== "false" &&
+        parseInt(strValue as string, 10).toString() !== strValue
+      ) {
+        strValue = JSON.stringify(strValue);
+      }
+      return `
+        ArgumentValueLiteral
+          .builder()
+          .value(${strValue})
+          .build()
+      `;
+    }
+    case "Argument": {
+      const value = generateCode(node.value);
+      return `
+        Argument
+          .builder()
+          .type(${str(node.type)})
+          .value(${value})
+          .build()
+      `;
+      break;
+    }
+    case "Root": {
+      const argumentDefinitions = node.argumentDefinitions
+        .map(generateCode)
+        .join(", ");
+      const selections = ((node.selections as unknown) as Selection[])
+        .map(generateCode)
+        .join(", ");
+      return `
+      Root.
+        builder()
+        .name(${str(node.name)})
+        .type(${str(node.type)})
+        .operation(${str(node.operation)})
+        .argumentDefinitions(Arrays.asList(${argumentDefinitions}))
+        .selections(Arrays.asList(${selections}))
+        .build()
+      `;
+      break;
+    }
+    case "Fragment": {
+      const argumentDefinitions = node.argumentDefinitions
+        .map(generateCode)
+        .join(", ");
+      const selections = node.selections.map(generateCode).join(", ");
+      return `
+        Fragment
+          .builder()
+          .name(${str(node.name)})
+          .type(${str(node.type)})
+          .argumentDefinitions(Arrays.asList(${argumentDefinitions}))
+          .selections(Arrays.asList(${selections}))
+          .build()
+      `;
+    }
+    case "FragmentSpread": {
+      const args = node.args.map(generateCode).join(", ");
+      return `
+        FragmentSpread
+          .builder()
+          .name(${str(node.name)})
+          .args(Arrays.asList(${args}))
+          .build()
+      `;
+    }
+    case "InlineDataFragmentSpread": {
+      break;
+    }
+    case "InlineFragment": {
+      break;
+    }
+    case "LinkedField": {
+      const selections = node.selections.map(generateCode).join(", ");
+      const args = node.args.map(generateCode).join(", ");
+      return `
+        LinkedField
+          .builder()
+          .name(${str(node.name)})
+          .alias(${str(node.alias)})
+          .type(${str(node.type)})
+          .args(Arrays.asList(${args}))
+          .selections(Arrays.asList(${selections}))
+          .build()
+      `;
+      break;
+    }
+    case "LocalArgumentDefinition": {
+      break;
+    }
+    case "ModuleImport": {
+      break;
+    }
+    case "Request": {
+      break;
+    }
+    case "RootArgumentDefinition": {
+      break;
+    }
+    case "ScalarField": {
+      const args = node.args.map(generateCode).join(", ");
+      return `
+        ScalarField
+          .builder()
+          .name(${str(node.name)})
+          .alias(${str(node.alias)})
+          .type(${str(node.type)})
+          .args(Arrays.asList(${args}))
+          .build()
+      `;
+      break;
+    }
+    case "SplitOperation": {
+      break;
+    }
+    case "Stream": {
+      break;
+    }
+    case "ClientExtension": {
+      break;
+    }
+    case "Condition": {
+      break;
+    }
+    case "Defer": {
+      break;
+    }
+  }
+  invariant(false, 'Kind "%s" did not match any condtion', node.kind);
+}
 
 export default function plugin(): PluginInterface {
   return {
     findGraphQLTags: find,
-    formatModule: ({
-      moduleName,
-      node,
-      docText,
-      definition,
-      documentType,
-      concreteText,
-      typeText,
-      kind
-    }) => {
+    formatModule: ({ moduleName, node, docText, definition }) => {
+      let sourceCode = "";
+
+      if (definition.kind === "Fragment") {
+        const className = definition.name;
+        const argumentDefinitions = definition.argumentDefinitions.map(
+          generateCode
+        );
+        const selections = definition.selections.map(generateCode);
+        sourceCode = `public class ${className} extends Fragment {
+          public ${className}() {
+            super(
+              ${str(definition.name)},
+              ${str(definition.type)},
+              Arrays.asList(${argumentDefinitions.join(", ")}),
+              Arrays.asList(${selections.join(", ")})
+            );
+          }
+        }
+      `;
+      } else if (definition.kind === "Request") {
+        const className = `${definition.name}`;
+        const fragment = generateCode(definition.fragment);
+        const root = generateCode(definition.root);
+
+        sourceCode = `
+        public class ${className} extends Request {
+          public ${className}() {
+            super(${fragment}, ${root});
+          }
+        }
+      `;
+      }
+
       const docTextComment = docText
         ? "\n/*\n" + docText.trim() + "\n*/\n"
         : "";
 
-      const sourceModule = `package com.github.edvinerikson.relay.generated;
+      const sourceModule = `
+      package com.github.edvinerikson.relay.generated;
+      import java.util.Arrays;
+      import com.github.edvinerikson.relay.types.*;
+/*
+${JSON.stringify(node, null, 2)}
+*/
 
 ${docTextComment}
 
-/* ${concreteText} */
-
-${format(typeText, {
-  filepath: moduleName + ".java",
-  plugins: [require("prettier-plugin-java")]
-})}
+${sourceCode}
 `;
-      // return sourceModule;
-      console.log(moduleName);
-      return sourceModule;
+      return format(sourceModule, {
+        filepath: moduleName + ".java",
+        plugins: [require("prettier-plugin-java")]
+      });
     },
     inputExtensions: ["jsp"],
     outputExtension: "java",
     typeGenerator: {
       generate: (schema, node, options) => {
-        function buildArgumentValue(value: ArgumentValue) {
-          switch (value.kind) {
-            case "ListValue": {
-              break;
-            }
-            case "Literal": {
-              let strValue = value.value as string;
-              if (
-                strValue !== "true" &&
-                strValue !== "false" &&
-                parseInt(strValue, 10).toString() !== strValue
-              ) {
-                strValue = JSON.stringify(strValue);
-              }
-              return `ArgumentValueLiteral.builder().value(${strValue}).build()`;
-            }
-            case "ObjectValue": {
-              break;
-            }
-            case "Variable": {
-              return stringify`ArgumentValueVariable.builder().type(${value.type}).variableName(${value.variableName}).build()`;
-            }
-          }
-          return "";
-        }
-        function buildArgument(argument: Argument) {
-          return `Argument
-.builder()
-.name(${JSON.stringify(argument.name)})
-.type(${JSON.stringify(argument.type)})
-.value(${buildArgumentValue(argument.value)})
-.build()`;
-        }
-        function buildArguments(args: readonly Argument[]) {
-          return args.map(buildArgument).join(`,`);
-        }
-        function buildSelection(selection: Selection): string {
-          console.log(selection.kind);
-          switch (selection.kind) {
-            case "ScalarField": {
-              return `
-ScalarField
-.builder()
-.name(${JSON.stringify(selection.name)})
-.type(${JSON.stringify(selection.type)})
-.alias(${JSON.stringify(selection.alias)})
-.args(Arrays.asList(${buildArguments(selection.args)}))
-.build()`;
-            }
-
-            case "LinkedField": {
-              console.log(
-                schema.getTypeFromString(schema.getTypeString(selection.type))
-              );
-              return `
-LinkedField
-.builder()
-.name(${JSON.stringify(selection.name)})
-.type(${JSON.stringify(selection.type)})
-.selections(Arrays.asList(${buildSelections(selection.selections)}))
-.args(Arrays.asList(${buildArguments(selection.args)}))
-.build()`;
-            }
-            default: {
-              return "";
-            }
-          }
-        }
-        function buildSelections(selections: readonly Selection[]) {
-          return selections.length === 0
-            ? null
-            : selections.map(buildSelection).join(", ");
-        }
-
-        let depth = 0;
-
-        function line(text: string, scope?: () => void, end?: string) {
-          types += " ".repeat(depth * 4) + text + "\n";
-          if (scope) {
-            depth += 1;
-            scope();
-            depth -= 1;
-          }
-          if (end) {
-            line(end);
-          }
-        }
-        let types = "";
-        line("import java.util.Arrays;");
-        line("import com.github.edvinerikson.relay.types.*;\n");
-        if (node.kind === "Fragment") {
-          line(
-            `public class ${node.name} extends Fragment {`,
-            () => {
-              line(
-                `public ${node.name}() {`,
-                () => {
-                  line(
-                    "super(",
-                    () => {
-                      line(`${JSON.stringify(node.name)},`);
-                      line(`${JSON.stringify(node.type)},`);
-                      line(`Arrays.asList(),`);
-                      line(
-                        `Arrays.asList(${buildSelections(node.selections)})`
-                      );
-                    },
-                    ");"
-                  );
-                },
-                "}"
-              );
-            },
-            "}"
-          );
-        }
-
-        return types;
+        return "";
       },
       transforms: []
     }

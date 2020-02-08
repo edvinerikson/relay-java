@@ -5,13 +5,8 @@
 
 <graphql:fragment>
   <graphql:text key="user">
-    fragment Welcome_user on User {
-      name
-      picture(size: "50x50")
-      posts {
-        title
-      }
-    }
+    fragment Welcome_user on User { name picture(size: "50x50") posts { title }
+    weirdList { title } }
   </graphql:text>
   <graphql:text key="post">
     fragment Welcome_post on Post { title }

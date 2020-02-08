@@ -1,8 +1,10 @@
 package com.github.edvinerikson.relay.generated;
 
+import com.github.edvinerikson.relay.types.*;
+import java.util.Arrays;
 
-
-/* {
+/*
+{
   "kind": "Fragment",
   "name": "Welcome_user",
   "type": "User",
@@ -46,12 +48,28 @@ package com.github.edvinerikson.relay.generated;
           "storageKey": null
         }
       ]
+    },
+    {
+      "kind": "LinkedField",
+      "alias": null,
+      "name": "weirdList",
+      "storageKey": null,
+      "args": null,
+      "concreteType": "Post",
+      "plural": true,
+      "selections": [
+        {
+          "kind": "ScalarField",
+          "alias": null,
+          "name": "title",
+          "args": null,
+          "storageKey": null
+        }
+      ]
     }
   ]
-} */
-
-import com.github.edvinerikson.relay.types.*;
-import java.util.Arrays;
+}
+*/
 
 public class Welcome_user extends Fragment {
 
@@ -64,20 +82,19 @@ public class Welcome_user extends Fragment {
         ScalarField
           .builder()
           .name("name")
-          .type("String")
           .alias("name")
+          .type("String")
           .args(Arrays.asList())
           .build(),
         ScalarField
           .builder()
           .name("picture")
-          .type("String")
           .alias("picture")
+          .type("String")
           .args(
             Arrays.asList(
               Argument
                 .builder()
-                .name("size")
                 .type("String")
                 .value(ArgumentValueLiteral.builder().value("50x50").build())
                 .build()
@@ -87,22 +104,40 @@ public class Welcome_user extends Fragment {
         LinkedField
           .builder()
           .name("posts")
+          .alias("posts")
           .type("[Post]")
+          .args(Arrays.asList())
           .selections(
             Arrays.asList(
               ScalarField
                 .builder()
                 .name("title")
-                .type("String")
                 .alias("title")
+                .type("String")
                 .args(Arrays.asList())
                 .build()
             )
           )
+          .build(),
+        LinkedField
+          .builder()
+          .name("weirdList")
+          .alias("weirdList")
+          .type("[[Post]]")
           .args(Arrays.asList())
+          .selections(
+            Arrays.asList(
+              ScalarField
+                .builder()
+                .name("title")
+                .alias("title")
+                .type("String")
+                .args(Arrays.asList())
+                .build()
+            )
+          )
           .build()
       )
     );
   }
 }
-
