@@ -1,0 +1,14 @@
+type Query {
+  user: User
+  post: Post
+}
+
+type User {
+  name: String
+  picture(size: String): String
+  posts: [Post]
+}
+
+type Post {
+  title: String
+}

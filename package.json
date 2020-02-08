@@ -1,0 +1,26 @@
+{
+  "scripts": {
+    "compile:watch": "tsc --watch",
+    "compile": "tsc",
+    "gql": "relay-compiler"
+  },
+  "dependencies": {
+    "@types/node": "^13.7.0",
+    "invariant": "^2.2.4",
+    "parse5": "^5.1.1",
+    "prettier": "^1.19.1",
+    "prettier-plugin-java": "^0.7.0",
+    "relay-compiler": "^8.0.0",
+    "relay-config": "^8.0.0",
+    "walk-parse5": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/invariant": "^2.2.31",
+    "@types/parse5": "^5.0.2",
+    "@types/prettier": "^1.19.0",
+    "@types/relay-compiler": "^8.0.0",
+    "@types/warning": "^3.0.0",
+    "patch-package": "^6.2.0",
+    "typescript": "^3.7.5"
+  }
+}

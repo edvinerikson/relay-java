@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2018", "DOM"],
+    "outDir": "out/",
+    "module": "commonjs",
+    "strict": true,
+    "target": "ES2015",
+    "rootDir": ".",
+    "esModuleInterop": true
+  },
+  "include": ["./**/*.ts"],
+  "files": ["./declarations.d.ts"]
+}

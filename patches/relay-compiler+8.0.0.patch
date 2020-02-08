@@ -1,0 +1,57 @@
+diff --git a/node_modules/relay-compiler/bin/relay-compiler b/node_modules/relay-compiler/bin/relay-compiler
+index 069e41c..06d585e 100755
+--- a/node_modules/relay-compiler/bin/relay-compiler
++++ b/node_modules/relay-compiler/bin/relay-compiler
+@@ -8781,7 +8781,7 @@ function getCodegenRunner(config) {
+   var writerConfigs = (0, _defineProperty2["default"])({}, sourceWriterName, {
+     writeFiles: getRelayFileWriter(config.src, languagePlugin, config.noFutureProofEnums, artifactDirectory, config.persistOutput, config.customScalars, persistQueryFunction),
+     isGeneratedFile: function isGeneratedFile(filePath) {
+-      return filePath.endsWith('.graphql.' + outputExtension) && filePath.includes(generatedDirectoryName);
++      return filePath.endsWith("." + outputExtension) && filePath.includes(generatedDirectoryName);
+     },
+     parser: sourceParserName,
+     baseParsers: ['graphql']
+@@ -13635,7 +13635,7 @@ function _writeRelayGeneratedFile() {
+     var generatedNode = _generatedNode; // Copy to const so Flow can refine.
+ 
+     var persistQuery = _persistQuery;
+-    var moduleName = (generatedNode.kind === 'Request' ? generatedNode.params.name : generatedNode.name) + '.graphql';
++    var moduleName = (generatedNode.kind === 'Request' ? generatedNode.params.name : generatedNode.name);
+     var platformName = platform != null && platform.length > 0 ? moduleName + '.' + platform : moduleName;
+     var filename = platformName + '.' + extension;
+     var queryParametersFilename = generatedNode.kind === 'Request' ? generatedNode.params.name + '$Parameters' + (platform != null ? '.' + platform : '') + ".".concat(extension) : null;
+@@ -17856,7 +17856,7 @@ var _require = __webpack_require__(105),
+ module.exports = function () {
+   return {
+     inputExtensions: ['js', 'jsx'],
+-    outputExtension: 'js',
++    outputExtension: 'graphql.js',
+     typeGenerator: RelayFlowGenerator,
+     formatModule: formatGeneratedModule,
+     findGraphQLTags: find
+diff --git a/node_modules/relay-compiler/lib/codegen/writeRelayGeneratedFile.js b/node_modules/relay-compiler/lib/codegen/writeRelayGeneratedFile.js
+index fa492fc..a0d2270 100644
+--- a/node_modules/relay-compiler/lib/codegen/writeRelayGeneratedFile.js
++++ b/node_modules/relay-compiler/lib/codegen/writeRelayGeneratedFile.js
+@@ -63,7 +63,7 @@ function _writeRelayGeneratedFile() {
+     var generatedNode = _generatedNode; // Copy to const so Flow can refine.
+ 
+     var persistQuery = _persistQuery;
+-    var moduleName = (generatedNode.kind === 'Request' ? generatedNode.params.name : generatedNode.name) + '.graphql';
++    var moduleName = (generatedNode.kind === 'Request' ? generatedNode.params.name : generatedNode.name);
+     var platformName = platform != null && platform.length > 0 ? moduleName + '.' + platform : moduleName;
+     var filename = platformName + '.' + extension;
+     var queryParametersFilename = generatedNode.kind === 'Request' ? generatedNode.params.name + '$Parameters' + (platform != null ? '.' + platform : '') + ".".concat(extension) : null;
+diff --git a/node_modules/relay-compiler/lib/language/javascript/RelayLanguagePluginJavaScript.js b/node_modules/relay-compiler/lib/language/javascript/RelayLanguagePluginJavaScript.js
+index 168c447..3fc808a 100644
+--- a/node_modules/relay-compiler/lib/language/javascript/RelayLanguagePluginJavaScript.js
++++ b/node_modules/relay-compiler/lib/language/javascript/RelayLanguagePluginJavaScript.js
+@@ -20,7 +20,7 @@ var _require = require('./FindGraphQLTags'),
+ module.exports = function () {
+   return {
+     inputExtensions: ['js', 'jsx'],
+-    outputExtension: 'js',
++    outputExtension: 'graphql.js',
+     typeGenerator: RelayFlowGenerator,
+     formatModule: formatGeneratedModule,
+     findGraphQLTags: find
