@@ -23,6 +23,7 @@
     "@types/node": "^13.7.0",
     "@types/prettier": "^1.19.0",
     "@types/relay-compiler": "^8.0.0",
+    "@types/relay-config": "^6.0.1",
     "@types/relay-runtime": "^8.0.6",
     "babel-jest": "^25.1.0",
     "graphql": "^14.6.0",
