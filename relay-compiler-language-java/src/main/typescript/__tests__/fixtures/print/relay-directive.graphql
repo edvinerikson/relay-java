@@ -1,0 +1,36 @@
+fragment MyMaskedFragment on Query {
+  currentBackofficeAgent {
+    id
+  }
+}
+
+fragment MyUnmaskedFragment on Query {
+  currentBackofficeAgent {
+    name
+  }
+}
+query WithRelayDirectiveQuery {
+  ...MyUnmaskedFragment @relay(mask: false)
+  ...MyMaskedFragment @relay(mask: true)
+  ...MyAlwaysMaskedFragment
+  ...MyAlwaysUnmaskedFragment
+
+  posts {
+    ...MyPluralFragment
+  }
+}
+
+fragment MyAlwaysMaskedFragment on Query @relay(mask: true) {
+  currentBackofficeAgent {
+    name
+  }
+}
+fragment MyAlwaysUnmaskedFragment on Query @relay(mask: false) {
+  currentBackofficeAgent {
+    name
+  }
+}
+
+fragment MyPluralFragment on Post @relay(plural: true) {
+  title
+}

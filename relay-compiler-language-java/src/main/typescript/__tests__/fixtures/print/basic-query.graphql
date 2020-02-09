@@ -1,0 +1,7 @@
+query GetCurrentBackOfficeAgentQuery {
+  currentBackofficeAgent {
+    __typename
+    id
+    name
+  }
+}

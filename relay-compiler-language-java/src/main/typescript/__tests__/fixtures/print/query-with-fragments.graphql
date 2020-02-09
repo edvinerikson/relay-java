@@ -1,0 +1,17 @@
+query MyQuery {
+  ...query_frag
+  ... on Query {
+    currentBackofficeAgent {
+      name
+      ...AgentData
+    }
+  }
+}
+
+fragment query_frag on Query @inline {
+  __typename
+}
+fragment AgentData on BackofficeAgent {
+  id
+  name
+}

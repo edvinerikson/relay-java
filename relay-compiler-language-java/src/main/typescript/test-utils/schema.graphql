@@ -1,0 +1,44 @@
+type Query {
+  currentBackofficeAgent: BackofficeAgent
+  player(playerUid: String): PlayerResult
+
+  allPlayers(includeDeleted: Boolean): [AllPlayerResult]
+
+  posts(filter: PostSearchFilter): [Post]
+}
+
+type Post implements Node {
+  id: ID!
+  title: String
+}
+
+input PostSearchFilter {
+  deleted: Boolean
+  drafts: Boolean
+}
+
+type BackofficeAgent implements Node {
+  id: ID!
+  name: String
+}
+
+interface Node {
+  id: ID!
+}
+
+type Player implements Node {
+  id: ID!
+  username: String
+  picture(size: String): String
+}
+
+union AllPlayerResult = Player | PlayerDeleted
+union PlayerResult = Player | PlayerNotFound | PlayerDeleted
+
+type PlayerNotFound {
+  message: String
+}
+
+type PlayerDeleted {
+  reason: String
+}

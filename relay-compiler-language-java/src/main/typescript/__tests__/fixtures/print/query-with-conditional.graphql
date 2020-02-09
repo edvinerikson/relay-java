@@ -1,0 +1,14 @@
+query ConditionalQuery {
+  player {
+    __typename
+  }
+  currentBackofficeAgent @include(if: false) {
+    name
+  }
+}
+
+query ConditionalVariableQuery($enabled: Boolean!) {
+  currentBackofficeAgent @include(if: $enabled) {
+    name
+  }
+}

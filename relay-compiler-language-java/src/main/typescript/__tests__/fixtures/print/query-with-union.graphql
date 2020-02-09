@@ -1,0 +1,27 @@
+query PlayerResultInlineFragmentQuery {
+  player(playerUid: "123") {
+    __typename
+    ... on Player {
+      username
+    }
+    ... on PlayerNotFound {
+      message
+    }
+  }
+}
+
+query PlayerResultFragmentQuery {
+  player(playerUid: "123") {
+    __typename
+    ...PlayerFragment
+    ...PlayerNotFound
+  }
+}
+
+fragment PlayerFragment on Player {
+  username
+}
+
+fragment PlayerNotFound on PlayerNotFound {
+  message
+}

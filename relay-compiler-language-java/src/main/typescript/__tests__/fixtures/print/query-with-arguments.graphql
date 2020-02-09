@@ -1,0 +1,17 @@
+query GetStaticPlayerQuery {
+  player(playerUid: "123456789") {
+    __typename
+  }
+}
+
+query GetAllPlayersQuery {
+  allPlayers(includeDeleted: true) {
+    __typename
+  }
+}
+
+query GetDeletedPostsQuery {
+  posts(filter: { deleted: true }) {
+    title
+  }
+}

@@ -1,0 +1,5 @@
+query GetPlayerQuery($playerId: String) {
+  player(playerUid: $playerId) {
+    __typename
+  }
+}

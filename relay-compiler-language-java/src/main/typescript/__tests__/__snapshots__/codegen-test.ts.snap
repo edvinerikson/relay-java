@@ -1,0 +1,741 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`print(node) matches expected output: basic-query.graphql 1`] = `
+~~~~~~~~~~ INPUT ~~~~~~~~~~
+query GetCurrentBackOfficeAgentQuery {
+  currentBackofficeAgent {
+    __typename
+    id
+    name
+  }
+}
+
+~~~~~~~~~~ OUTPUT ~~~~~~~~~~
+public class GetCurrentBackOfficeAgentQuery extends Request {
+
+  public GetCurrentBackOfficeAgentQuery() {
+    super(
+      "GetCurrentBackOfficeAgentQuery",
+      Fragment
+        .builder()
+        .name("GetCurrentBackOfficeAgentQuery")
+        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .selections(
+          Arrays.asList(
+            LinkedField
+              .builder()
+              .name("currentBackofficeAgent")
+              .alias("currentBackofficeAgent")
+              .selections(
+                Arrays.asList(
+                  ScalarField
+                    .builder()
+                    .name("__typename")
+                    .alias("__typename")
+                    .build(),
+                  ScalarField.builder().name("id").alias("id").build(),
+                  ScalarField.builder().name("name").alias("name").build()
+                )
+              )
+              .build()
+          )
+        )
+        .build()
+    );
+  }
+}
+
+`;
+
+exports[`print(node) matches expected output: query-with-alias.graphql 1`] = `
+~~~~~~~~~~ INPUT ~~~~~~~~~~
+query AliasedQuery {
+  agent: currentBackofficeAgent {
+    name
+  }
+}
+
+~~~~~~~~~~ OUTPUT ~~~~~~~~~~
+public class AliasedQuery extends Request {
+
+  public AliasedQuery() {
+    super(
+      "AliasedQuery",
+      Fragment
+        .builder()
+        .name("AliasedQuery")
+        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .selections(
+          Arrays.asList(
+            LinkedField
+              .builder()
+              .name("currentBackofficeAgent")
+              .alias("agent")
+              .selections(
+                Arrays.asList(
+                  ScalarField.builder().name("name").alias("name").build()
+                )
+              )
+              .build()
+          )
+        )
+        .build()
+    );
+  }
+}
+
+`;
+
+exports[`print(node) matches expected output: query-with-arguments.graphql 1`] = `
+~~~~~~~~~~ INPUT ~~~~~~~~~~
+query GetStaticPlayerQuery {
+  player(playerUid: "123456789") {
+    __typename
+  }
+}
+
+query GetAllPlayersQuery {
+  allPlayers(includeDeleted: true) {
+    __typename
+  }
+}
+
+query GetDeletedPostsQuery {
+  posts(filter: { deleted: true }) {
+    title
+  }
+}
+
+~~~~~~~~~~ OUTPUT ~~~~~~~~~~
+public class GetStaticPlayerQuery extends Request {
+
+  public GetStaticPlayerQuery() {
+    super(
+      "GetStaticPlayerQuery",
+      Fragment
+        .builder()
+        .name("GetStaticPlayerQuery")
+        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .selections(
+          Arrays.asList(
+            LinkedField
+              .builder()
+              .name("player")
+              .alias("player")
+              .selections(
+                Arrays.asList(
+                  ScalarField
+                    .builder()
+                    .name("__typename")
+                    .alias("__typename")
+                    .build()
+                )
+              )
+              .build()
+          )
+        )
+        .build()
+    );
+  }
+}
+
+
+public class GetAllPlayersQuery extends Request {
+
+  public GetAllPlayersQuery() {
+    super(
+      "GetAllPlayersQuery",
+      Fragment
+        .builder()
+        .name("GetAllPlayersQuery")
+        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .selections(
+          Arrays.asList(
+            LinkedField
+              .builder()
+              .name("allPlayers")
+              .alias("allPlayers")
+              .selections(
+                Arrays.asList(
+                  ScalarField
+                    .builder()
+                    .name("__typename")
+                    .alias("__typename")
+                    .build()
+                )
+              )
+              .build()
+          )
+        )
+        .build()
+    );
+  }
+}
+
+
+public class GetDeletedPostsQuery extends Request {
+
+  public GetDeletedPostsQuery() {
+    super(
+      "GetDeletedPostsQuery",
+      Fragment
+        .builder()
+        .name("GetDeletedPostsQuery")
+        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .selections(
+          Arrays.asList(
+            LinkedField
+              .builder()
+              .name("posts")
+              .alias("posts")
+              .selections(
+                Arrays.asList(
+                  ScalarField.builder().name("title").alias("title").build()
+                )
+              )
+              .build()
+          )
+        )
+        .build()
+    );
+  }
+}
+
+`;
+
+exports[`print(node) matches expected output: query-with-conditional.graphql 1`] = `
+~~~~~~~~~~ INPUT ~~~~~~~~~~
+query ConditionalQuery {
+  player {
+    __typename
+  }
+  currentBackofficeAgent @include(if: false) {
+    name
+  }
+}
+
+query ConditionalVariableQuery($enabled: Boolean!) {
+  currentBackofficeAgent @include(if: $enabled) {
+    name
+  }
+}
+
+~~~~~~~~~~ OUTPUT ~~~~~~~~~~
+public class ConditionalQuery extends Request {
+
+  public ConditionalQuery() {
+    super(
+      "ConditionalQuery",
+      Fragment
+        .builder()
+        .name("ConditionalQuery")
+        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .selections(
+          Arrays.asList(
+            LinkedField
+              .builder()
+              .name("player")
+              .alias("player")
+              .selections(
+                Arrays.asList(
+                  ScalarField
+                    .builder()
+                    .name("__typename")
+                    .alias("__typename")
+                    .build()
+                )
+              )
+              .build()
+          )
+        )
+        .build()
+    );
+  }
+}
+
+
+public class ConditionalVariableQuery extends Request {
+
+  public ConditionalVariableQuery() {
+    super(
+      "ConditionalVariableQuery",
+      Fragment
+        .builder()
+        .name("ConditionalVariableQuery")
+        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .selections(
+          Arrays.asList(
+            Condition
+              .builder()
+              .condition("enabled")
+              .passingValue(true)
+              .selections(
+                Arrays.asList(
+                  LinkedField
+                    .builder()
+                    .name("currentBackofficeAgent")
+                    .alias("currentBackofficeAgent")
+                    .selections(
+                      Arrays.asList(
+                        ScalarField.builder().name("name").alias("name").build()
+                      )
+                    )
+                    .build()
+                )
+              )
+              .build()
+          )
+        )
+        .build()
+    );
+  }
+}
+
+`;
+
+exports[`print(node) matches expected output: query-with-fragments.graphql 1`] = `
+~~~~~~~~~~ INPUT ~~~~~~~~~~
+query MyQuery {
+  ...query_frag
+  ... on Query {
+    currentBackofficeAgent {
+      name
+      ...AgentData
+    }
+  }
+}
+
+fragment query_frag on Query @inline {
+  __typename
+}
+fragment AgentData on BackofficeAgent {
+  id
+  name
+}
+
+~~~~~~~~~~ OUTPUT ~~~~~~~~~~
+public class MyQuery extends Request {
+
+  public MyQuery() {
+    super(
+      "MyQuery",
+      Fragment
+        .builder()
+        .name("MyQuery")
+        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .selections(
+          Arrays.asList(
+            LinkedField
+              .builder()
+              .name("currentBackofficeAgent")
+              .alias("currentBackofficeAgent")
+              .selections(
+                Arrays.asList(
+                  ScalarField.builder().name("name").alias("name").build(),
+                  FragmentSpread.builder().name("AgentData").build()
+                )
+              )
+              .build(),
+            InlineDataFragmentSpread
+              .builder()
+              .name("query_frag")
+              .selections(
+                Arrays.asList(
+                  ScalarField
+                    .builder()
+                    .name("__typename")
+                    .alias("__typename")
+                    .build()
+                )
+              )
+              .build()
+          )
+        )
+        .build()
+    );
+  }
+}
+
+
+public class query_frag extends InlineDataFragment {
+
+  public query_frag() {
+    super("query_frag");
+  }
+}
+
+
+public class AgentData extends Fragment {
+
+  public AgentData() {
+    super(
+      "AgentData",
+      FragmentMetadata.builder().plural(false).mask(true).build(),
+      Arrays.asList(
+        ScalarField.builder().name("id").alias("id").build(),
+        ScalarField.builder().name("name").alias("name").build()
+      )
+    );
+  }
+}
+
+`;
+
+exports[`print(node) matches expected output: query-with-union.graphql 1`] = `
+~~~~~~~~~~ INPUT ~~~~~~~~~~
+query PlayerResultInlineFragmentQuery {
+  player(playerUid: "123") {
+    __typename
+    ... on Player {
+      username
+    }
+    ... on PlayerNotFound {
+      message
+    }
+  }
+}
+
+query PlayerResultFragmentQuery {
+  player(playerUid: "123") {
+    __typename
+    ...PlayerFragment
+    ...PlayerNotFound
+  }
+}
+
+fragment PlayerFragment on Player {
+  username
+}
+
+fragment PlayerNotFound on PlayerNotFound {
+  message
+}
+
+~~~~~~~~~~ OUTPUT ~~~~~~~~~~
+public class PlayerResultInlineFragmentQuery extends Request {
+
+  public PlayerResultInlineFragmentQuery() {
+    super(
+      "PlayerResultInlineFragmentQuery",
+      Fragment
+        .builder()
+        .name("PlayerResultInlineFragmentQuery")
+        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .selections(
+          Arrays.asList(
+            LinkedField
+              .builder()
+              .name("player")
+              .alias("player")
+              .selections(
+                Arrays.asList(
+                  ScalarField
+                    .builder()
+                    .name("__typename")
+                    .alias("__typename")
+                    .build(),
+                  InlineFragment
+                    .builder()
+                    .type("Player")
+                    .selections(
+                      Arrays.asList(
+                        ScalarField
+                          .builder()
+                          .name("username")
+                          .alias("username")
+                          .build()
+                      )
+                    )
+                    .build(),
+                  InlineFragment
+                    .builder()
+                    .type("PlayerNotFound")
+                    .selections(
+                      Arrays.asList(
+                        ScalarField
+                          .builder()
+                          .name("message")
+                          .alias("message")
+                          .build()
+                      )
+                    )
+                    .build()
+                )
+              )
+              .build()
+          )
+        )
+        .build()
+    );
+  }
+}
+
+
+public class PlayerResultFragmentQuery extends Request {
+
+  public PlayerResultFragmentQuery() {
+    super(
+      "PlayerResultFragmentQuery",
+      Fragment
+        .builder()
+        .name("PlayerResultFragmentQuery")
+        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .selections(
+          Arrays.asList(
+            LinkedField
+              .builder()
+              .name("player")
+              .alias("player")
+              .selections(
+                Arrays.asList(
+                  ScalarField
+                    .builder()
+                    .name("__typename")
+                    .alias("__typename")
+                    .build(),
+                  FragmentSpread.builder().name("PlayerFragment").build(),
+                  FragmentSpread.builder().name("PlayerNotFound").build()
+                )
+              )
+              .build()
+          )
+        )
+        .build()
+    );
+  }
+}
+
+
+public class PlayerFragment extends Fragment {
+
+  public PlayerFragment() {
+    super(
+      "PlayerFragment",
+      FragmentMetadata.builder().plural(false).mask(true).build(),
+      Arrays.asList(
+        ScalarField.builder().name("username").alias("username").build()
+      )
+    );
+  }
+}
+
+
+public class PlayerNotFound extends Fragment {
+
+  public PlayerNotFound() {
+    super(
+      "PlayerNotFound",
+      FragmentMetadata.builder().plural(false).mask(true).build(),
+      Arrays.asList(
+        ScalarField.builder().name("message").alias("message").build()
+      )
+    );
+  }
+}
+
+`;
+
+exports[`print(node) matches expected output: query-with-variables.graphql 1`] = `
+~~~~~~~~~~ INPUT ~~~~~~~~~~
+query GetPlayerQuery($playerId: String) {
+  player(playerUid: $playerId) {
+    __typename
+  }
+}
+
+~~~~~~~~~~ OUTPUT ~~~~~~~~~~
+public class GetPlayerQuery extends Request {
+
+  public GetPlayerQuery() {
+    super(
+      "GetPlayerQuery",
+      Fragment
+        .builder()
+        .name("GetPlayerQuery")
+        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .selections(
+          Arrays.asList(
+            LinkedField
+              .builder()
+              .name("player")
+              .alias("player")
+              .selections(
+                Arrays.asList(
+                  ScalarField
+                    .builder()
+                    .name("__typename")
+                    .alias("__typename")
+                    .build()
+                )
+              )
+              .build()
+          )
+        )
+        .build()
+    );
+  }
+}
+
+`;
+
+exports[`print(node) matches expected output: relay-directive.graphql 1`] = `
+~~~~~~~~~~ INPUT ~~~~~~~~~~
+fragment MyMaskedFragment on Query {
+  currentBackofficeAgent {
+    id
+  }
+}
+
+fragment MyUnmaskedFragment on Query {
+  currentBackofficeAgent {
+    name
+  }
+}
+query WithRelayDirectiveQuery {
+  ...MyUnmaskedFragment @relay(mask: false)
+  ...MyMaskedFragment @relay(mask: true)
+  ...MyAlwaysMaskedFragment
+  ...MyAlwaysUnmaskedFragment
+
+  posts {
+    ...MyPluralFragment
+  }
+}
+
+fragment MyAlwaysMaskedFragment on Query @relay(mask: true) {
+  currentBackofficeAgent {
+    name
+  }
+}
+fragment MyAlwaysUnmaskedFragment on Query @relay(mask: false) {
+  currentBackofficeAgent {
+    name
+  }
+}
+
+fragment MyPluralFragment on Post @relay(plural: true) {
+  title
+}
+
+~~~~~~~~~~ OUTPUT ~~~~~~~~~~
+public class WithRelayDirectiveQuery extends Request {
+
+  public WithRelayDirectiveQuery() {
+    super(
+      "WithRelayDirectiveQuery",
+      Fragment
+        .builder()
+        .name("WithRelayDirectiveQuery")
+        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .selections(
+          Arrays.asList(
+            LinkedField
+              .builder()
+              .name("currentBackofficeAgent")
+              .alias("currentBackofficeAgent")
+              .selections(
+                Arrays.asList(
+                  ScalarField.builder().name("name").alias("name").build()
+                )
+              )
+              .build(),
+            LinkedField
+              .builder()
+              .name("posts")
+              .alias("posts")
+              .selections(
+                Arrays.asList(
+                  FragmentSpread.builder().name("MyPluralFragment").build()
+                )
+              )
+              .build(),
+            FragmentSpread.builder().name("MyMaskedFragment").build(),
+            FragmentSpread.builder().name("MyAlwaysMaskedFragment").build(),
+            FragmentSpread.builder().name("MyAlwaysUnmaskedFragment").build()
+          )
+        )
+        .build()
+    );
+  }
+}
+
+
+public class MyMaskedFragment extends Fragment {
+
+  public MyMaskedFragment() {
+    super(
+      "MyMaskedFragment",
+      FragmentMetadata.builder().plural(false).mask(true).build(),
+      Arrays.asList(
+        LinkedField
+          .builder()
+          .name("currentBackofficeAgent")
+          .alias("currentBackofficeAgent")
+          .selections(
+            Arrays.asList(ScalarField.builder().name("id").alias("id").build())
+          )
+          .build()
+      )
+    );
+  }
+}
+
+
+public class MyAlwaysMaskedFragment extends Fragment {
+
+  public MyAlwaysMaskedFragment() {
+    super(
+      "MyAlwaysMaskedFragment",
+      FragmentMetadata.builder().plural(false).mask(true).build(),
+      Arrays.asList(
+        LinkedField
+          .builder()
+          .name("currentBackofficeAgent")
+          .alias("currentBackofficeAgent")
+          .selections(
+            Arrays.asList(
+              ScalarField.builder().name("name").alias("name").build()
+            )
+          )
+          .build()
+      )
+    );
+  }
+}
+
+
+public class MyAlwaysUnmaskedFragment extends Fragment {
+
+  public MyAlwaysUnmaskedFragment() {
+    super(
+      "MyAlwaysUnmaskedFragment",
+      FragmentMetadata.builder().plural(false).mask(false).build(),
+      Arrays.asList(
+        LinkedField
+          .builder()
+          .name("currentBackofficeAgent")
+          .alias("currentBackofficeAgent")
+          .selections(
+            Arrays.asList(
+              ScalarField.builder().name("name").alias("name").build()
+            )
+          )
+          .build()
+      )
+    );
+  }
+}
+
+
+public class MyPluralFragment extends Fragment {
+
+  public MyPluralFragment() {
+    super(
+      "MyPluralFragment",
+      FragmentMetadata.builder().plural(true).mask(true).build(),
+      Arrays.asList(ScalarField.builder().name("title").alias("title").build())
+    );
+  }
+}
+
+`;
