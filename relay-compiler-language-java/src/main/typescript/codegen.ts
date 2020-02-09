@@ -1,15 +1,9 @@
 import {
   ReaderFragment,
   ReaderFragmentSpread,
-  ReaderArgumentDefinition,
-  ReaderLocalArgument,
-  ReaderRootArgument,
   ReaderSelection,
   ReaderLinkedField,
-  ReaderArgument,
   ReaderScalarField,
-  ReaderVariable,
-  ReaderLiteral,
   ReaderCondition,
   ReaderInlineFragment,
   ReaderInlineDataFragmentSpread,
@@ -17,10 +11,6 @@ import {
 } from "relay-runtime/lib/util/ReaderNode";
 import { GeneratedNode, ConcreteRequest } from "relay-runtime";
 import invariant from "invariant";
-
-type PrintOptions = {
-  createClass?: boolean;
-};
 
 function str(text: string): string {
   return JSON.stringify(text);
@@ -144,18 +134,6 @@ function printSelection(node: ReaderSelection): string {
       `;
     }
 
-    case "Fragment": {
-      let field = node as ReaderFragment;
-      return `
-        Fragment
-          .builder()
-          .name(${str(field.name)})
-          .metadata(${printFragmentMetadata(field)})
-          .selections(${printSelections(field.selections)})
-          .build()
-      `;
-    }
-
     case "InlineFragment": {
       let field = node as ReaderInlineFragment;
       return `
@@ -163,16 +141,6 @@ function printSelection(node: ReaderSelection): string {
           .builder()
           .type(${str(field.type)})
           .selections(${printSelections(field.selections)})
-          .build()
-      `;
-    }
-
-    case "InlineDataFragment": {
-      let field = node as ReaderInlineDataFragment;
-      return `
-        InlineDataFragment
-          .builder()
-          .name(${str(field.name)})
           .build()
       `;
     }
@@ -217,16 +185,6 @@ function printSelections(
     .join(", ")})`;
 }
 
-function printFragmentMetadata(fragment: ReaderFragment) {
-  return `
-    FragmentMetadata
-      .builder()
-      .plural(${fragment.metadata?.plural ?? false})
-      .mask(${fragment.metadata?.mask ?? true})
-      .build()
-  `;
-}
-
 /**
  * Converts Relay IR AST to Java code
  * @param node
@@ -252,7 +210,8 @@ export function print(
           public ${node.name}() {
             super(
               ${str(node.name)},
-              ${printFragmentMetadata(node)},
+              ${node.metadata?.mask ?? true},
+              ${node.metadata?.plural ?? false},
               ${printSelections(node.selections)}
             );
           }
@@ -265,7 +224,16 @@ export function print(
       return `
         public class ${node.params.name} extends Request {
           public ${node.params.name}() {
-            super(${str(node.params.name)}, ${printSelection(node.fragment)});
+            super(
+              ${str(node.params.name)},
+              Fragment
+                .builder()
+                .name(${str(node.fragment.name)})
+                .masked(${node.fragment.metadata?.mask ?? true})
+                .plural(${node.fragment.metadata?.plural ?? false})
+                .selections(${printSelections(node.fragment.selections)})
+                .build()
+            );
           }
         }
       `;

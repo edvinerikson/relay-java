@@ -19,7 +19,8 @@ public class GetCurrentBackOfficeAgentQuery extends Request {
       Fragment
         .builder()
         .name("GetCurrentBackOfficeAgentQuery")
-        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .masked(true)
+        .plural(false)
         .selections(
           Arrays.asList(
             LinkedField
@@ -64,7 +65,8 @@ public class AliasedQuery extends Request {
       Fragment
         .builder()
         .name("AliasedQuery")
-        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .masked(true)
+        .plural(false)
         .selections(
           Arrays.asList(
             LinkedField
@@ -115,7 +117,8 @@ public class GetStaticPlayerQuery extends Request {
       Fragment
         .builder()
         .name("GetStaticPlayerQuery")
-        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .masked(true)
+        .plural(false)
         .selections(
           Arrays.asList(
             LinkedField
@@ -148,7 +151,8 @@ public class GetAllPlayersQuery extends Request {
       Fragment
         .builder()
         .name("GetAllPlayersQuery")
-        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .masked(true)
+        .plural(false)
         .selections(
           Arrays.asList(
             LinkedField
@@ -181,7 +185,8 @@ public class GetDeletedPostsQuery extends Request {
       Fragment
         .builder()
         .name("GetDeletedPostsQuery")
-        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .masked(true)
+        .plural(false)
         .selections(
           Arrays.asList(
             LinkedField
@@ -229,7 +234,8 @@ public class ConditionalQuery extends Request {
       Fragment
         .builder()
         .name("ConditionalQuery")
-        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .masked(true)
+        .plural(false)
         .selections(
           Arrays.asList(
             LinkedField
@@ -262,7 +268,8 @@ public class ConditionalVariableQuery extends Request {
       Fragment
         .builder()
         .name("ConditionalVariableQuery")
-        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .masked(true)
+        .plural(false)
         .selections(
           Arrays.asList(
             Condition
@@ -322,7 +329,8 @@ public class MyQuery extends Request {
       Fragment
         .builder()
         .name("MyQuery")
-        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .masked(true)
+        .plural(false)
         .selections(
           Arrays.asList(
             LinkedField
@@ -370,7 +378,8 @@ public class AgentData extends Fragment {
   public AgentData() {
     super(
       "AgentData",
-      FragmentMetadata.builder().plural(false).mask(true).build(),
+      true,
+      false,
       Arrays.asList(
         ScalarField.builder().name("id").alias("id").build(),
         ScalarField.builder().name("name").alias("name").build()
@@ -420,7 +429,8 @@ public class PlayerResultInlineFragmentQuery extends Request {
       Fragment
         .builder()
         .name("PlayerResultInlineFragmentQuery")
-        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .masked(true)
+        .plural(false)
         .selections(
           Arrays.asList(
             LinkedField
@@ -479,7 +489,8 @@ public class PlayerResultFragmentQuery extends Request {
       Fragment
         .builder()
         .name("PlayerResultFragmentQuery")
-        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .masked(true)
+        .plural(false)
         .selections(
           Arrays.asList(
             LinkedField
@@ -511,7 +522,8 @@ public class PlayerFragment extends Fragment {
   public PlayerFragment() {
     super(
       "PlayerFragment",
-      FragmentMetadata.builder().plural(false).mask(true).build(),
+      true,
+      false,
       Arrays.asList(
         ScalarField.builder().name("username").alias("username").build()
       )
@@ -525,7 +537,8 @@ public class PlayerNotFound extends Fragment {
   public PlayerNotFound() {
     super(
       "PlayerNotFound",
-      FragmentMetadata.builder().plural(false).mask(true).build(),
+      true,
+      false,
       Arrays.asList(
         ScalarField.builder().name("message").alias("message").build()
       )
@@ -552,7 +565,8 @@ public class GetPlayerQuery extends Request {
       Fragment
         .builder()
         .name("GetPlayerQuery")
-        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .masked(true)
+        .plural(false)
         .selections(
           Arrays.asList(
             LinkedField
@@ -626,7 +640,8 @@ public class WithRelayDirectiveQuery extends Request {
       Fragment
         .builder()
         .name("WithRelayDirectiveQuery")
-        .metadata(FragmentMetadata.builder().plural(false).mask(true).build())
+        .masked(true)
+        .plural(false)
         .selections(
           Arrays.asList(
             LinkedField
@@ -665,7 +680,8 @@ public class MyMaskedFragment extends Fragment {
   public MyMaskedFragment() {
     super(
       "MyMaskedFragment",
-      FragmentMetadata.builder().plural(false).mask(true).build(),
+      true,
+      false,
       Arrays.asList(
         LinkedField
           .builder()
@@ -686,7 +702,8 @@ public class MyAlwaysMaskedFragment extends Fragment {
   public MyAlwaysMaskedFragment() {
     super(
       "MyAlwaysMaskedFragment",
-      FragmentMetadata.builder().plural(false).mask(true).build(),
+      true,
+      false,
       Arrays.asList(
         LinkedField
           .builder()
@@ -709,7 +726,8 @@ public class MyAlwaysUnmaskedFragment extends Fragment {
   public MyAlwaysUnmaskedFragment() {
     super(
       "MyAlwaysUnmaskedFragment",
-      FragmentMetadata.builder().plural(false).mask(false).build(),
+      false,
+      false,
       Arrays.asList(
         LinkedField
           .builder()
@@ -732,7 +750,8 @@ public class MyPluralFragment extends Fragment {
   public MyPluralFragment() {
     super(
       "MyPluralFragment",
-      FragmentMetadata.builder().plural(true).mask(true).build(),
+      true,
+      true,
       Arrays.asList(ScalarField.builder().name("title").alias("title").build())
     );
   }
