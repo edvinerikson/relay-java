@@ -8,7 +8,8 @@ import {
   Root,
   Schema,
   CompilerContext,
-  IRTransforms
+  IRTransforms,
+  GeneratedDefinition
 } from "relay-compiler";
 import { GeneratedNode } from "relay-runtime";
 // @ts-ignore
@@ -114,7 +115,9 @@ export function parseGraphQLText(
 export function printAST() {}
 // @ts-ignore
 import SkipUnreachableNodeTransform from "relay-compiler/lib/transforms/SkipUnreachableNodeTransform";
-export function compileArtifacts(context: CompilerContext): GeneratedNode[] {
+export function compileArtifacts(
+  context: CompilerContext
+): [GeneratedDefinition, GeneratedNode][] {
   const transforms = {
     ...IRTransforms,
     fragmentTransforms: [
@@ -123,11 +126,5 @@ export function compileArtifacts(context: CompilerContext): GeneratedNode[] {
     ]
   };
   // @ts-ignore
-  return (
-    compileRelayArtifacts(context, transforms)
-      // @ts-ignore
-      .map(([, node]) => {
-        return node;
-      })
-  );
+  return compileRelayArtifacts(context, transforms);
 }

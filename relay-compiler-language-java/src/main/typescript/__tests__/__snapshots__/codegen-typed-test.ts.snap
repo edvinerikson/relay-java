@@ -1,0 +1,606 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`print(node) matches expected output: basic-query.graphql 1`] = `
+~~~~~~~~~~ INPUT ~~~~~~~~~~
+query GetCurrentBackOfficeAgentQuery {
+  currentBackofficeAgent {
+    __typename
+    id
+    name
+  }
+}
+
+~~~~~~~~~~ OUTPUT ~~~~~~~~~~
+public class GetCurrentBackOfficeAgentQuery {
+
+  private static class CurrentBackofficeAgentClass {
+    @Getter
+    private String __typename;
+
+    @Getter
+    private String id;
+
+    @Getter
+    private String name;
+
+    private CurrentBackofficeAgentClass(HashMap<String, Object> data) {
+      this.__typename = (String) data.get("__typename");
+      this.id = (String) data.get("id");
+      this.name = (String) data.get("name");
+    }
+  }
+
+  @Getter
+  private CurrentBackofficeAgentClass currentBackofficeAgent;
+
+  public GetCurrentBackOfficeAgentQuery(HashMap<String, Object> data) {
+    this.currentBackofficeAgent =
+      new CurrentBackofficeAgentClass(
+        (HashMap<String, Object>) data.get("currentBackofficeAgent")
+      );
+  }
+}
+
+`;
+
+exports[`print(node) matches expected output: query-with-alias.graphql 1`] = `
+~~~~~~~~~~ INPUT ~~~~~~~~~~
+query AliasedQuery {
+  agent: currentBackofficeAgent {
+    name
+  }
+}
+
+~~~~~~~~~~ OUTPUT ~~~~~~~~~~
+public class AliasedQuery {
+
+  private static class AgentClass {
+    @Getter
+    private String name;
+
+    private AgentClass(HashMap<String, Object> data) {
+      this.name = (String) data.get("name");
+    }
+  }
+
+  @Getter
+  private AgentClass agent;
+
+  public AliasedQuery(HashMap<String, Object> data) {
+    this.agent = new AgentClass((HashMap<String, Object>) data.get("agent"));
+  }
+}
+
+`;
+
+exports[`print(node) matches expected output: query-with-arguments.graphql 1`] = `
+~~~~~~~~~~ INPUT ~~~~~~~~~~
+query GetStaticPlayerQuery {
+  player(playerUid: "123456789") {
+    __typename
+  }
+}
+
+query GetAllPlayersQuery {
+  allPlayers(includeDeleted: true) {
+    __typename
+  }
+}
+
+query GetDeletedPostsQuery {
+  posts(filter: { deleted: true }) {
+    title
+  }
+}
+
+~~~~~~~~~~ OUTPUT ~~~~~~~~~~
+public class GetStaticPlayerQuery {
+
+  private static class PlayerClass {
+    @Getter
+    private String __typename;
+
+    private PlayerClass(HashMap<String, Object> data) {
+      this.__typename = (String) data.get("__typename");
+    }
+  }
+
+  @Getter
+  private PlayerClass player;
+
+  public GetStaticPlayerQuery(HashMap<String, Object> data) {
+    this.player = new PlayerClass((HashMap<String, Object>) data.get("player"));
+  }
+}
+
+
+public class GetAllPlayersQuery {
+
+  private static class AllPlayersClass {
+    @Getter
+    private String __typename;
+
+    private AllPlayersClass(HashMap<String, Object> data) {
+      this.__typename = (String) data.get("__typename");
+    }
+  }
+
+  @Getter
+  private List<AllPlayersClass> allPlayers;
+
+  public GetAllPlayersQuery(HashMap<String, Object> data) {
+    // TODO: Plural fields
+    this.allPlayers =
+      new AllPlayersClass((HashMap<String, Object>) data.get("allPlayers"));
+  }
+}
+
+
+public class GetDeletedPostsQuery {
+
+  private static class PostsClass {
+    @Getter
+    private String title;
+
+    private PostsClass(HashMap<String, Object> data) {
+      this.title = (String) data.get("title");
+    }
+  }
+
+  @Getter
+  private List<PostsClass> posts;
+
+  public GetDeletedPostsQuery(HashMap<String, Object> data) {
+    // TODO: Plural fields
+    this.posts = new PostsClass((HashMap<String, Object>) data.get("posts"));
+  }
+}
+
+`;
+
+exports[`print(node) matches expected output: query-with-conditional.graphql 1`] = `
+~~~~~~~~~~ INPUT ~~~~~~~~~~
+query ConditionalQuery {
+  player {
+    __typename
+  }
+  currentBackofficeAgent @include(if: false) {
+    name
+  }
+}
+
+query ConditionalVariableQuery($enabled: Boolean!) {
+  currentBackofficeAgent @include(if: $enabled) {
+    name
+  }
+}
+
+~~~~~~~~~~ OUTPUT ~~~~~~~~~~
+public class ConditionalQuery {
+
+  private static class PlayerClass {
+    @Getter
+    private String __typename;
+
+    private PlayerClass(HashMap<String, Object> data) {
+      this.__typename = (String) data.get("__typename");
+    }
+  }
+
+  @Getter
+  private PlayerClass player;
+
+  public ConditionalQuery(HashMap<String, Object> data) {
+    this.player = new PlayerClass((HashMap<String, Object>) data.get("player"));
+  }
+}
+
+
+public class ConditionalVariableQuery {
+
+  // TODO: Implement Conditions
+  public ConditionalVariableQuery(HashMap<String, Object> data) {
+    // TODO: Condition
+  }
+}
+
+`;
+
+exports[`print(node) matches expected output: query-with-fragments.graphql 1`] = `
+~~~~~~~~~~ INPUT ~~~~~~~~~~
+query MyQuery {
+  ...query_frag
+  ... on Query {
+    currentBackofficeAgent {
+      name
+      ...AgentData
+    }
+  }
+}
+
+fragment query_frag on Query @inline {
+  __typename
+}
+fragment AgentData on BackofficeAgent {
+  id
+  name
+}
+
+~~~~~~~~~~ OUTPUT ~~~~~~~~~~
+public class MyQuery {
+
+  private static class CurrentBackofficeAgentClass {
+    @Getter
+    private String name;
+
+    private AgentData __fragmentSpreadAgentData;
+
+    private CurrentBackofficeAgentClass(HashMap<String, Object> data) {
+      this.name = (String) data.get("name");
+      this.__fragmentSpreadAgentData = new AgentData(data);
+    }
+  }
+
+  @Getter
+  private CurrentBackofficeAgentClass currentBackofficeAgent;
+
+  // TODO: Implement InlineDataFragmentSpread
+  public MyQuery(HashMap<String, Object> data) {
+    this.currentBackofficeAgent =
+      new CurrentBackofficeAgentClass(
+        (HashMap<String, Object>) data.get("currentBackofficeAgent")
+      );
+    // TODO: InlineDataFragmentSpread
+  }
+}
+
+
+public class query_frag {
+  @Getter
+  private String __typename;
+
+  public query_frag(HashMap<String, Object> data) {
+    this.__typename = (String) data.get("__typename");
+  }
+}
+
+
+public class AgentData {
+  @Getter
+  private String id;
+
+  @Getter
+  private String name;
+
+  public AgentData(HashMap<String, Object> data) {
+    this.id = (String) data.get("id");
+    this.name = (String) data.get("name");
+  }
+}
+
+`;
+
+exports[`print(node) matches expected output: query-with-union.graphql 1`] = `
+~~~~~~~~~~ INPUT ~~~~~~~~~~
+query PlayerResultInlineFragmentQuery {
+  player(playerUid: "123") {
+    __typename
+    ... on Player {
+      username
+    }
+    ... on PlayerNotFound {
+      message
+    }
+  }
+}
+
+query PlayerResultFragmentQuery {
+  player(playerUid: "123") {
+    __typename
+    ...PlayerFragment
+    ...PlayerNotFound
+  }
+}
+
+fragment PlayerFragment on Player {
+  username
+}
+
+fragment PlayerNotFound on PlayerNotFound {
+  message
+}
+
+~~~~~~~~~~ OUTPUT ~~~~~~~~~~
+public class PlayerResultInlineFragmentQuery {
+
+  private static class PlayerClass {
+    @Getter
+    private String __typename;
+
+    private static class InlineFragmentPlayer extends PlayerClass {
+      @Getter
+      private String username;
+
+      InlineFragmentPlayer(HashMap<String, Object> data) {
+        super(data);
+        this.username = (String) data.get("username");
+      }
+    }
+
+    private static class InlineFragmentPlayerNotFound extends PlayerClass {
+      @Getter
+      private String message;
+
+      InlineFragmentPlayerNotFound(HashMap<String, Object> data) {
+        super(data);
+        this.message = (String) data.get("message");
+      }
+    }
+
+    private PlayerClass(HashMap<String, Object> data) {
+      this.__typename = (String) data.get("__typename");
+    }
+  }
+
+  @Getter
+  private PlayerClass player;
+
+  public PlayerResultInlineFragmentQuery(HashMap<String, Object> data) {
+    this.player = new PlayerClass((HashMap<String, Object>) data.get("player"));
+    if ("Player".equals((String) data.get("__typename"))) {
+      this.player =
+        new PlayerClass.InlineFragmentPlayer(
+          (HashMap<String, Object>) data.get("player")
+        );
+    } else if ("PlayerNotFound".equals((String) data.get("__typename"))) {
+      this.player =
+        new PlayerClass.InlineFragmentPlayerNotFound(
+          (HashMap<String, Object>) data.get("player")
+        );
+    }
+  }
+}
+
+
+public class PlayerResultFragmentQuery {
+
+  private static class PlayerClass {
+    @Getter
+    private String __typename;
+
+    private PlayerFragment __fragmentSpreadPlayerFragment;
+    private PlayerNotFound __fragmentSpreadPlayerNotFound;
+
+    private PlayerClass(HashMap<String, Object> data) {
+      this.__typename = (String) data.get("__typename");
+      this.__fragmentSpreadPlayerFragment = new PlayerFragment(data);
+      this.__fragmentSpreadPlayerNotFound = new PlayerNotFound(data);
+    }
+  }
+
+  @Getter
+  private PlayerClass player;
+
+  public PlayerResultFragmentQuery(HashMap<String, Object> data) {
+    this.player = new PlayerClass((HashMap<String, Object>) data.get("player"));
+  }
+}
+
+
+public class PlayerFragment {
+  @Getter
+  private String username;
+
+  public PlayerFragment(HashMap<String, Object> data) {
+    this.username = (String) data.get("username");
+  }
+}
+
+
+public class PlayerNotFound {
+  @Getter
+  private String message;
+
+  public PlayerNotFound(HashMap<String, Object> data) {
+    this.message = (String) data.get("message");
+  }
+}
+
+`;
+
+exports[`print(node) matches expected output: query-with-variables.graphql 1`] = `
+~~~~~~~~~~ INPUT ~~~~~~~~~~
+query GetPlayerQuery($playerId: String) {
+  player(playerUid: $playerId) {
+    __typename
+  }
+}
+
+~~~~~~~~~~ OUTPUT ~~~~~~~~~~
+public class GetPlayerQuery {
+
+  private static class PlayerClass {
+    @Getter
+    private String __typename;
+
+    private PlayerClass(HashMap<String, Object> data) {
+      this.__typename = (String) data.get("__typename");
+    }
+  }
+
+  @Getter
+  private PlayerClass player;
+
+  public GetPlayerQuery(HashMap<String, Object> data) {
+    this.player = new PlayerClass((HashMap<String, Object>) data.get("player"));
+  }
+}
+
+`;
+
+exports[`print(node) matches expected output: relay-directive.graphql 1`] = `
+~~~~~~~~~~ INPUT ~~~~~~~~~~
+fragment MyMaskedFragment on Query {
+  currentBackofficeAgent {
+    id
+  }
+}
+
+fragment MyUnmaskedFragment on Query {
+  currentBackofficeAgent {
+    name
+  }
+}
+query WithRelayDirectiveQuery {
+  ...MyUnmaskedFragment @relay(mask: false)
+  ...MyMaskedFragment @relay(mask: true)
+  ...MyAlwaysMaskedFragment
+  ...MyAlwaysUnmaskedFragment
+
+  posts {
+    ...MyPluralFragment
+  }
+}
+
+fragment MyAlwaysMaskedFragment on Query @relay(mask: true) {
+  currentBackofficeAgent {
+    name
+  }
+}
+fragment MyAlwaysUnmaskedFragment on Query @relay(mask: false) {
+  currentBackofficeAgent {
+    name
+  }
+}
+
+fragment MyPluralFragment on Post @relay(plural: true) {
+  title
+}
+
+~~~~~~~~~~ OUTPUT ~~~~~~~~~~
+public class WithRelayDirectiveQuery {
+
+  private static class CurrentBackofficeAgentClass {
+    @Getter
+    private String name;
+
+    private CurrentBackofficeAgentClass(HashMap<String, Object> data) {
+      this.name = (String) data.get("name");
+    }
+  }
+
+  @Getter
+  private CurrentBackofficeAgentClass currentBackofficeAgent;
+
+  private static class PostsClass {
+    private MyPluralFragment __fragmentSpreadMyPluralFragment;
+
+    private PostsClass(HashMap<String, Object> data) {
+      this.__fragmentSpreadMyPluralFragment = new MyPluralFragment(data);
+    }
+  }
+
+  @Getter
+  private List<PostsClass> posts;
+
+  private MyMaskedFragment __fragmentSpreadMyMaskedFragment;
+  private MyAlwaysMaskedFragment __fragmentSpreadMyAlwaysMaskedFragment;
+  private MyAlwaysUnmaskedFragment __fragmentSpreadMyAlwaysUnmaskedFragment;
+
+  public WithRelayDirectiveQuery(HashMap<String, Object> data) {
+    this.currentBackofficeAgent =
+      new CurrentBackofficeAgentClass(
+        (HashMap<String, Object>) data.get("currentBackofficeAgent")
+      );
+
+    // TODO: Plural fields
+    this.posts = new PostsClass((HashMap<String, Object>) data.get("posts"));
+
+    this.__fragmentSpreadMyMaskedFragment = new MyMaskedFragment(data);
+    this.__fragmentSpreadMyAlwaysMaskedFragment =
+      new MyAlwaysMaskedFragment(data);
+    this.__fragmentSpreadMyAlwaysUnmaskedFragment =
+      new MyAlwaysUnmaskedFragment(data);
+  }
+}
+
+
+public class MyMaskedFragment {
+
+  private static class CurrentBackofficeAgentClass {
+    @Getter
+    private String id;
+
+    private CurrentBackofficeAgentClass(HashMap<String, Object> data) {
+      this.id = (String) data.get("id");
+    }
+  }
+
+  @Getter
+  private CurrentBackofficeAgentClass currentBackofficeAgent;
+
+  public MyMaskedFragment(HashMap<String, Object> data) {
+    this.currentBackofficeAgent =
+      new CurrentBackofficeAgentClass(
+        (HashMap<String, Object>) data.get("currentBackofficeAgent")
+      );
+  }
+}
+
+
+public class MyAlwaysMaskedFragment {
+
+  private static class CurrentBackofficeAgentClass {
+    @Getter
+    private String name;
+
+    private CurrentBackofficeAgentClass(HashMap<String, Object> data) {
+      this.name = (String) data.get("name");
+    }
+  }
+
+  @Getter
+  private CurrentBackofficeAgentClass currentBackofficeAgent;
+
+  public MyAlwaysMaskedFragment(HashMap<String, Object> data) {
+    this.currentBackofficeAgent =
+      new CurrentBackofficeAgentClass(
+        (HashMap<String, Object>) data.get("currentBackofficeAgent")
+      );
+  }
+}
+
+
+public class MyAlwaysUnmaskedFragment {
+
+  private static class CurrentBackofficeAgentClass {
+    @Getter
+    private String name;
+
+    private CurrentBackofficeAgentClass(HashMap<String, Object> data) {
+      this.name = (String) data.get("name");
+    }
+  }
+
+  @Getter
+  private CurrentBackofficeAgentClass currentBackofficeAgent;
+
+  public MyAlwaysUnmaskedFragment(HashMap<String, Object> data) {
+    this.currentBackofficeAgent =
+      new CurrentBackofficeAgentClass(
+        (HashMap<String, Object>) data.get("currentBackofficeAgent")
+      );
+  }
+}
+
+
+public class MyPluralFragment {
+  @Getter
+  private String title;
+
+  public MyPluralFragment(HashMap<String, Object> data) {
+    this.title = (String) data.get("title");
+  }
+}
+
+`;

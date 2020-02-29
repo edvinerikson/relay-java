@@ -1,4 +1,4 @@
-import { print } from "../codegen";
+import { print } from "../codegen-typed";
 
 import { CompilerContext, IRTransforms } from "relay-compiler";
 
@@ -20,9 +20,9 @@ describe("print(node)", () => {
       ...IRTransforms.queryTransforms
     ]);
     return compileArtifacts(compilerContext)
-      .map(([, node]) => {
+      .map(([definition]) => {
         let out = "";
-        out += print(node) + "\n\n";
+        out += print(definition) + "\n\n";
 
         try {
           return format(out, {
