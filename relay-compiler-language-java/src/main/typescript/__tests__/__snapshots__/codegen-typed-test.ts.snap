@@ -13,7 +13,7 @@ query GetCurrentBackOfficeAgentQuery {
 ~~~~~~~~~~ OUTPUT ~~~~~~~~~~
 public class GetCurrentBackOfficeAgentQuery {
 
-  private static class CurrentBackofficeAgentClass {
+  private static class currentBackofficeAgent {
     @Getter
     private String __typename;
 
@@ -23,7 +23,7 @@ public class GetCurrentBackOfficeAgentQuery {
     @Getter
     private String name;
 
-    private CurrentBackofficeAgentClass(HashMap<String, Object> data) {
+    private currentBackofficeAgent(HashMap<String, Object> data) {
       this.__typename = (String) data.get("__typename");
       this.id = (String) data.get("id");
       this.name = (String) data.get("name");
@@ -31,11 +31,11 @@ public class GetCurrentBackOfficeAgentQuery {
   }
 
   @Getter
-  private CurrentBackofficeAgentClass currentBackofficeAgent;
+  private currentBackofficeAgent currentBackofficeAgent;
 
   public GetCurrentBackOfficeAgentQuery(HashMap<String, Object> data) {
     this.currentBackofficeAgent =
-      new CurrentBackofficeAgentClass(
+      new currentBackofficeAgent(
         (HashMap<String, Object>) data.get("currentBackofficeAgent")
       );
   }
@@ -54,20 +54,20 @@ query AliasedQuery {
 ~~~~~~~~~~ OUTPUT ~~~~~~~~~~
 public class AliasedQuery {
 
-  private static class AgentClass {
+  private static class agent {
     @Getter
     private String name;
 
-    private AgentClass(HashMap<String, Object> data) {
+    private agent(HashMap<String, Object> data) {
       this.name = (String) data.get("name");
     }
   }
 
   @Getter
-  private AgentClass agent;
+  private agent agent;
 
   public AliasedQuery(HashMap<String, Object> data) {
-    this.agent = new AgentClass((HashMap<String, Object>) data.get("agent"));
+    this.agent = new agent((HashMap<String, Object>) data.get("agent"));
   }
 }
 
@@ -96,63 +96,70 @@ query GetDeletedPostsQuery {
 ~~~~~~~~~~ OUTPUT ~~~~~~~~~~
 public class GetStaticPlayerQuery {
 
-  private static class PlayerClass {
+  private static class player {
     @Getter
     private String __typename;
 
-    private PlayerClass(HashMap<String, Object> data) {
+    private player(HashMap<String, Object> data) {
       this.__typename = (String) data.get("__typename");
     }
   }
 
   @Getter
-  private PlayerClass player;
+  private player player;
 
   public GetStaticPlayerQuery(HashMap<String, Object> data) {
-    this.player = new PlayerClass((HashMap<String, Object>) data.get("player"));
+    this.player = new player((HashMap<String, Object>) data.get("player"));
   }
 }
 
 
 public class GetAllPlayersQuery {
 
-  private static class AllPlayersClass {
+  private static class allPlayers {
     @Getter
     private String __typename;
 
-    private AllPlayersClass(HashMap<String, Object> data) {
+    private allPlayers(HashMap<String, Object> data) {
       this.__typename = (String) data.get("__typename");
     }
   }
 
   @Getter
-  private List<AllPlayersClass> allPlayers;
+  private List<allPlayers> allPlayers;
 
   public GetAllPlayersQuery(HashMap<String, Object> data) {
-    // TODO: Plural fields
-    this.allPlayers =
-      new AllPlayersClass((HashMap<String, Object>) data.get("allPlayers"));
+    this.allPlayers = Collections.emptyList();
+    for (HashMap<String, Object> item : (List<HashMap<String, Object>>) data.get(
+      "allPlayers"
+    )) {
+      this.allPlayers.add(new allPlayers(item));
+    }
   }
 }
 
 
 public class GetDeletedPostsQuery {
 
-  private static class PostsClass {
+  private static class posts {
     @Getter
     private String title;
 
-    private PostsClass(HashMap<String, Object> data) {
+    private posts(HashMap<String, Object> data) {
       this.title = (String) data.get("title");
     }
   }
 
   @Getter
-  private List<PostsClass> posts;
+  private List<posts> posts;
 
   public GetDeletedPostsQuery(HashMap<String, Object> data) {
-    // TODO: Plural fields
-    this.posts = new PostsClass((HashMap<String, Object>) data.get("posts"));
+    this.posts = Collections.emptyList();
+    for (HashMap<String, Object> item : (List<HashMap<String, Object>>) data.get(
+      "posts"
+    )) {
+      this.posts.add(new posts(item));
+    }
   }
 }
 
@@ -178,20 +185,20 @@ query ConditionalVariableQuery($enabled: Boolean!) {
 ~~~~~~~~~~ OUTPUT ~~~~~~~~~~
 public class ConditionalQuery {
 
-  private static class PlayerClass {
+  private static class player {
     @Getter
     private String __typename;
 
-    private PlayerClass(HashMap<String, Object> data) {
+    private player(HashMap<String, Object> data) {
       this.__typename = (String) data.get("__typename");
     }
   }
 
   @Getter
-  private PlayerClass player;
+  private player player;
 
   public ConditionalQuery(HashMap<String, Object> data) {
-    this.player = new PlayerClass((HashMap<String, Object>) data.get("player"));
+    this.player = new player((HashMap<String, Object>) data.get("player"));
   }
 }
 
@@ -229,25 +236,25 @@ fragment AgentData on BackofficeAgent {
 ~~~~~~~~~~ OUTPUT ~~~~~~~~~~
 public class MyQuery {
 
-  private static class CurrentBackofficeAgentClass {
+  private static class currentBackofficeAgent {
     @Getter
     private String name;
 
     private AgentData __fragmentSpreadAgentData;
 
-    private CurrentBackofficeAgentClass(HashMap<String, Object> data) {
+    private currentBackofficeAgent(HashMap<String, Object> data) {
       this.name = (String) data.get("name");
       this.__fragmentSpreadAgentData = new AgentData(data);
     }
   }
 
   @Getter
-  private CurrentBackofficeAgentClass currentBackofficeAgent;
+  private currentBackofficeAgent currentBackofficeAgent;
 
   // TODO: Implement InlineDataFragmentSpread
   public MyQuery(HashMap<String, Object> data) {
     this.currentBackofficeAgent =
-      new CurrentBackofficeAgentClass(
+      new currentBackofficeAgent(
         (HashMap<String, Object>) data.get("currentBackofficeAgent")
       );
     // TODO: InlineDataFragmentSpread
@@ -313,50 +320,47 @@ fragment PlayerNotFound on PlayerNotFound {
 ~~~~~~~~~~ OUTPUT ~~~~~~~~~~
 public class PlayerResultInlineFragmentQuery {
 
-  private static class PlayerClass {
+  private static class player {
     @Getter
     private String __typename;
 
-    private static class InlineFragmentPlayer extends PlayerClass {
+    private static class Player extends player {
       @Getter
       private String username;
 
-      InlineFragmentPlayer(HashMap<String, Object> data) {
+      Player(HashMap<String, Object> data) {
         super(data);
         this.username = (String) data.get("username");
       }
     }
 
-    private static class InlineFragmentPlayerNotFound extends PlayerClass {
+    private static class PlayerNotFound extends player {
       @Getter
       private String message;
 
-      InlineFragmentPlayerNotFound(HashMap<String, Object> data) {
+      PlayerNotFound(HashMap<String, Object> data) {
         super(data);
         this.message = (String) data.get("message");
       }
     }
 
-    private PlayerClass(HashMap<String, Object> data) {
+    private player(HashMap<String, Object> data) {
       this.__typename = (String) data.get("__typename");
     }
   }
 
   @Getter
-  private PlayerClass player;
+  private player player;
 
   public PlayerResultInlineFragmentQuery(HashMap<String, Object> data) {
-    this.player = new PlayerClass((HashMap<String, Object>) data.get("player"));
+    this.player = new player((HashMap<String, Object>) data.get("player"));
+
     if ("Player".equals((String) data.get("__typename"))) {
       this.player =
-        new PlayerClass.InlineFragmentPlayer(
-          (HashMap<String, Object>) data.get("player")
-        );
+        new player.Player((HashMap<String, Object>) data.get("player"));
     } else if ("PlayerNotFound".equals((String) data.get("__typename"))) {
       this.player =
-        new PlayerClass.InlineFragmentPlayerNotFound(
-          (HashMap<String, Object>) data.get("player")
-        );
+        new player.PlayerNotFound((HashMap<String, Object>) data.get("player"));
     }
   }
 }
@@ -364,14 +368,14 @@ public class PlayerResultInlineFragmentQuery {
 
 public class PlayerResultFragmentQuery {
 
-  private static class PlayerClass {
+  private static class player {
     @Getter
     private String __typename;
 
     private PlayerFragment __fragmentSpreadPlayerFragment;
     private PlayerNotFound __fragmentSpreadPlayerNotFound;
 
-    private PlayerClass(HashMap<String, Object> data) {
+    private player(HashMap<String, Object> data) {
       this.__typename = (String) data.get("__typename");
       this.__fragmentSpreadPlayerFragment = new PlayerFragment(data);
       this.__fragmentSpreadPlayerNotFound = new PlayerNotFound(data);
@@ -379,10 +383,10 @@ public class PlayerResultFragmentQuery {
   }
 
   @Getter
-  private PlayerClass player;
+  private player player;
 
   public PlayerResultFragmentQuery(HashMap<String, Object> data) {
-    this.player = new PlayerClass((HashMap<String, Object>) data.get("player"));
+    this.player = new player((HashMap<String, Object>) data.get("player"));
   }
 }
 
@@ -419,20 +423,20 @@ query GetPlayerQuery($playerId: String) {
 ~~~~~~~~~~ OUTPUT ~~~~~~~~~~
 public class GetPlayerQuery {
 
-  private static class PlayerClass {
+  private static class player {
     @Getter
     private String __typename;
 
-    private PlayerClass(HashMap<String, Object> data) {
+    private player(HashMap<String, Object> data) {
       this.__typename = (String) data.get("__typename");
     }
   }
 
   @Getter
-  private PlayerClass player;
+  private player player;
 
   public GetPlayerQuery(HashMap<String, Object> data) {
-    this.player = new PlayerClass((HashMap<String, Object>) data.get("player"));
+    this.player = new player((HashMap<String, Object>) data.get("player"));
   }
 }
 
@@ -480,28 +484,28 @@ fragment MyPluralFragment on Post @relay(plural: true) {
 ~~~~~~~~~~ OUTPUT ~~~~~~~~~~
 public class WithRelayDirectiveQuery {
 
-  private static class CurrentBackofficeAgentClass {
+  private static class currentBackofficeAgent {
     @Getter
     private String name;
 
-    private CurrentBackofficeAgentClass(HashMap<String, Object> data) {
+    private currentBackofficeAgent(HashMap<String, Object> data) {
       this.name = (String) data.get("name");
     }
   }
 
   @Getter
-  private CurrentBackofficeAgentClass currentBackofficeAgent;
+  private currentBackofficeAgent currentBackofficeAgent;
 
-  private static class PostsClass {
+  private static class posts {
     private MyPluralFragment __fragmentSpreadMyPluralFragment;
 
-    private PostsClass(HashMap<String, Object> data) {
+    private posts(HashMap<String, Object> data) {
       this.__fragmentSpreadMyPluralFragment = new MyPluralFragment(data);
     }
   }
 
   @Getter
-  private List<PostsClass> posts;
+  private List<posts> posts;
 
   private MyMaskedFragment __fragmentSpreadMyMaskedFragment;
   private MyAlwaysMaskedFragment __fragmentSpreadMyAlwaysMaskedFragment;
@@ -509,12 +513,16 @@ public class WithRelayDirectiveQuery {
 
   public WithRelayDirectiveQuery(HashMap<String, Object> data) {
     this.currentBackofficeAgent =
-      new CurrentBackofficeAgentClass(
+      new currentBackofficeAgent(
         (HashMap<String, Object>) data.get("currentBackofficeAgent")
       );
 
-    // TODO: Plural fields
-    this.posts = new PostsClass((HashMap<String, Object>) data.get("posts"));
+    this.posts = Collections.emptyList();
+    for (HashMap<String, Object> item : (List<HashMap<String, Object>>) data.get(
+      "posts"
+    )) {
+      this.posts.add(new posts(item));
+    }
 
     this.__fragmentSpreadMyMaskedFragment = new MyMaskedFragment(data);
     this.__fragmentSpreadMyAlwaysMaskedFragment =
@@ -527,21 +535,21 @@ public class WithRelayDirectiveQuery {
 
 public class MyMaskedFragment {
 
-  private static class CurrentBackofficeAgentClass {
+  private static class currentBackofficeAgent {
     @Getter
     private String id;
 
-    private CurrentBackofficeAgentClass(HashMap<String, Object> data) {
+    private currentBackofficeAgent(HashMap<String, Object> data) {
       this.id = (String) data.get("id");
     }
   }
 
   @Getter
-  private CurrentBackofficeAgentClass currentBackofficeAgent;
+  private currentBackofficeAgent currentBackofficeAgent;
 
   public MyMaskedFragment(HashMap<String, Object> data) {
     this.currentBackofficeAgent =
-      new CurrentBackofficeAgentClass(
+      new currentBackofficeAgent(
         (HashMap<String, Object>) data.get("currentBackofficeAgent")
       );
   }
@@ -550,21 +558,21 @@ public class MyMaskedFragment {
 
 public class MyAlwaysMaskedFragment {
 
-  private static class CurrentBackofficeAgentClass {
+  private static class currentBackofficeAgent {
     @Getter
     private String name;
 
-    private CurrentBackofficeAgentClass(HashMap<String, Object> data) {
+    private currentBackofficeAgent(HashMap<String, Object> data) {
       this.name = (String) data.get("name");
     }
   }
 
   @Getter
-  private CurrentBackofficeAgentClass currentBackofficeAgent;
+  private currentBackofficeAgent currentBackofficeAgent;
 
   public MyAlwaysMaskedFragment(HashMap<String, Object> data) {
     this.currentBackofficeAgent =
-      new CurrentBackofficeAgentClass(
+      new currentBackofficeAgent(
         (HashMap<String, Object>) data.get("currentBackofficeAgent")
       );
   }
@@ -573,21 +581,21 @@ public class MyAlwaysMaskedFragment {
 
 public class MyAlwaysUnmaskedFragment {
 
-  private static class CurrentBackofficeAgentClass {
+  private static class currentBackofficeAgent {
     @Getter
     private String name;
 
-    private CurrentBackofficeAgentClass(HashMap<String, Object> data) {
+    private currentBackofficeAgent(HashMap<String, Object> data) {
       this.name = (String) data.get("name");
     }
   }
 
   @Getter
-  private CurrentBackofficeAgentClass currentBackofficeAgent;
+  private currentBackofficeAgent currentBackofficeAgent;
 
   public MyAlwaysUnmaskedFragment(HashMap<String, Object> data) {
     this.currentBackofficeAgent =
-      new CurrentBackofficeAgentClass(
+      new currentBackofficeAgent(
         (HashMap<String, Object>) data.get("currentBackofficeAgent")
       );
   }

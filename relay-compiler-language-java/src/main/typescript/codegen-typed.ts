@@ -19,26 +19,24 @@ function str(text: string): string {
   return JSON.stringify(text);
 }
 
-function camelCase(str: string): string {
-  return str.replace(/^[a-zA-Z0-9]/, str[0].toUpperCase());
-}
-
 function printSelection(node: Selection, parent: Selection | Fragment): string {
   switch (node.kind) {
     case "LinkedField": {
       const name = node.alias ?? node.name;
-      const className = camelCase(name) + "Class";
-      const isList = node.type.constructor.name === "List";
+      let type = printType(node.type);
+      const unwrappedType = unwrapType(node.type);
+
+      type = type.replace(unwrappedType, name);
       return `
-        private static class ${className} {
+        private static class ${name} {
           ${printSelectionDefinitions(node)}
-          private ${className}(HashMap<String, Object> data) {
+          private ${name}(HashMap<String, Object> data) {
             ${printInitSelections(node)}
           }
         }
 
         @Getter
-        private ${isList ? `List<${className}>` : className} ${name};
+        private ${type} ${name};
 
       `;
     }
@@ -51,8 +49,6 @@ function printSelection(node: Selection, parent: Selection | Fragment): string {
     }
 
     case "Condition": {
-      let field = node as Condition;
-
       return `// TODO: Implement Conditions`;
     }
 
@@ -61,7 +57,7 @@ function printSelection(node: Selection, parent: Selection | Fragment): string {
       switch (parent.kind) {
         case "LinkedField": {
           const name = parent.alias ?? parent.name;
-          parentName = camelCase(name) + "Class";
+          parentName = name;
           break;
         }
         default: {
@@ -73,11 +69,9 @@ function printSelection(node: Selection, parent: Selection | Fragment): string {
         }
       }
       return `
-        private static class InlineFragment${
-          node.typeCondition
-        } extends ${parentName} {
+        private static class ${node.typeCondition} extends ${parentName} {
           ${printSelectionDefinitions(node)}
-          InlineFragment${node.typeCondition}(HashMap<String, Object> data) {
+          ${node.typeCondition}(HashMap<String, Object> data) {
             super(data);
             ${printInitSelections(node)}
           }
@@ -160,9 +154,9 @@ function printInitSelection(node: Selection, parent: Selection | Fragment) {
     }
     case "LinkedField": {
       const name = node.alias ?? node.name;
-      const isList = node.type.constructor.name === "List";
-
-      const className = camelCase(name) + "Class";
+      let type = printType(node.type);
+      type = type.replace(unwrapType(node.type), name);
+      const isList = type.includes("List<");
       const inlineFragments = node.selections
         .filter(selection => selection.kind === "InlineFragment")
         .map(selection => {
@@ -170,7 +164,7 @@ function printInitSelection(node: Selection, parent: Selection | Fragment) {
             return `if (${str(
               selection.typeCondition
             )}.equals((String) data.get("__typename"))) {
-            this.${name} = new ${className}.InlineFragment${
+            this.${name} = new ${name}.${
               selection.typeCondition
             }((HashMap<String, Object>) data.get(${str(name)}));
           }
@@ -179,11 +173,63 @@ function printInitSelection(node: Selection, parent: Selection | Fragment) {
           return "";
         })
         .join(" else ");
+      let stack = 0;
+      let typeNode = node.type;
+      let previousNode = null;
+      while (typeNode != null) {
+        let _previousNode = typeNode;
+        switch (typeNode.constructor.name) {
+          case "List": {
+            typeNode = typeNode.ofType;
+            stack += 1;
+            break;
+          }
+          case "NonNull": {
+            typeNode = typeNode.ofType;
+            _previousNode = previousNode;
+            break;
+          }
+          default: {
+            typeNode = null;
+          }
+        }
+        previousNode = _previousNode;
+      }
+      let string = "";
+      for (let i = stack; i > 0; i--) {
+        if (i === 1) {
+          `items${i + 1}.add(new ${name}(item));`;
+        } else if (i === stack) {
+          `this.${name}.add(items${i - 1});`;
+        } else {
+          string += `
+            List<Object> items${i} = Collections.emptyList();
+            for (List<Object> : items${i}) {
+              List<Object> items${i - 1} = Collections.emptyList();
+              items${i}.add(items${i - 1});
+            }
+          `;
+        }
+      }
+      console.log(string);
+
       return `
-        ${isList ? "// TODO: Plural fields" : ""}
-        this.${name} = new ${className}((HashMap<String, Object>) data.get(${str(
-        name
-      )}));
+        ${
+          isList
+            ? `
+        this.${name} = Collections.emptyList();
+        for (HashMap<String, Object> item : (List<HashMap<String, Object>>) data.get(${str(
+          name
+        )})) {
+          this.${name}.add(new ${name}(item));
+        }
+        `
+            : `
+        this.${name} = new ${name}((HashMap<String, Object>) data.get(${str(
+                name
+              )}));
+        `
+        }
         ${inlineFragments}
         `;
     }
@@ -192,11 +238,9 @@ function printInitSelection(node: Selection, parent: Selection | Fragment) {
     }
     case "InlineFragment": {
       let parentField = "";
-      let parentClassName = "";
       switch (parent.kind) {
         case "LinkedField": {
           parentField = parent.alias ?? parent.name;
-          parentClassName = camelCase(parentField + "Class");
           break;
         }
         default: {
@@ -241,6 +285,10 @@ function printType(type: any): string {
     case "NonNull": {
       return printType(type.ofType);
     }
+    case "UnionType":
+    case "ObjectType": {
+      return type.name;
+    }
     case "ScalarType": {
       switch (type.name) {
         case "ID": {
@@ -252,9 +300,30 @@ function printType(type: any): string {
           return type;
       }
     }
+    case "List": {
+      return `List<${printType(type.ofType)}>`;
+    }
     default: {
       // TODO: Custom scalars
+      console.log(type);
       return "Object";
     }
   }
+}
+
+function unwrapType(type: any): string {
+  const name = type.constructor.name;
+  switch (name) {
+    case "UnionType":
+    case "EnumType":
+    case "ObjectType":
+    case "ScalarType": {
+      return type.name;
+    }
+    case "List":
+    case "NonNull": {
+      return unwrapType(type.ofType);
+    }
+  }
+  return type;
 }

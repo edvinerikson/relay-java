@@ -5,6 +5,8 @@ type Query {
   allPlayers(includeDeleted: Boolean): [AllPlayerResult]
 
   posts(filter: PostSearchFilter): [Post]
+  nestedPosts: [[Post]]
+  nestedNestedPosts: [[[Post]]]
 }
 
 type Post implements Node {

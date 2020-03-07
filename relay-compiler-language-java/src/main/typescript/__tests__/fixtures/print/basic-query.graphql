@@ -5,3 +5,12 @@ query GetCurrentBackOfficeAgentQuery {
     name
   }
 }
+
+query GetNestedPostsQuery {
+  nestedPosts {
+    title
+  }
+  nestedNestedPosts {
+    title
+  }
+}
